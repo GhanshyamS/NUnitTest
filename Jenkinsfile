@@ -19,7 +19,7 @@ pipeline {
       steps {
         script {
           echo 'Stage 3'
-		  powershell(". '.power.ps1'") 
+		  powershell(". 'power.ps1'") 
         }
       }
     }
