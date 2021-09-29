@@ -19,7 +19,7 @@ pipeline {
       steps {
         script {
           echo 'Stage 3'
-		  powershell("Get-Location") 
+		  powershell returnStatus: true, script: '.\\power.ps1'
         }
       }
     }
