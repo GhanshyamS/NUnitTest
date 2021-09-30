@@ -1,48 +1,47 @@
 function setParamValues{
 Param
     (
-         [string] $script:SolutionPath,
-[string] $script:SolutionName,
-         [string] $script:NUnitConsoleExecutable,
-[string] $script:ExtentExecutable,
+        $script:SolutionPath,
+        $script:NUnitConsoleExecutable,
+		$script:ExtentExecutable,
 
-[string] $script:DoxyConfig,
-[string] $script:DoxyExecutable,
-[string] $script:GraphvizExecutablePath
-
+		$script:DoxyConfig,
+		$script:DoxyExecutable,
+		$script:GraphvizExecutablePath
 
     )
 
-
-
 }
-
-#setParamValues -SolutionPath "aa//bb//cc"  -SolutionName "" -NUnitConsoleExecutable "${env.WORKSPACE}\packages\NUnit.ConsoleRunner.3.12.0\tools\nunit3-console.exe"  -ExtentExecutable  "${env.WORKSPACE}packages\extent.0.0.3\tools\extent.exe" -DoxyConfig "C:\Temp\DoxygenTest\bundlemanager-poc.config"  -DoxyExecutable "${env.WORKSPACE}\packages\Doxygen.1.8.14\tools" -GraphvizExecutablePath "C:\Program Files\Graphviz\bin"
-
 Set-Location -Path $env:WORKSPACE
-$script:SolutionPath = "NUnitConsoleApp/ConsoleApp1.sln"   #${env.WORKSPACE}
-$script:ProjectPath = "$env:WORKSPACE/bin/Debug/netcoreapp3.1/ConsoleApp1.dll"
-$script:SolutionName = $env.JOB_NAME
-$script:MSBuildPath = $env:SystemRoot"/Microsoft.NET/Framework\v3.5"
+$script:ProjectName = "NUnitConsoleApp"
+$script:SolutionPath = "$ProjectName/NUnitConsoleApp.sln"  
+$script:ProjectPath = "$ProjectName/NUnitConsoleApp/bin/Debug/netcoreapp3.1/ConsoleApp1.dll"
+$script:MSBuildPath = "\Windows\Microsoft.NET\Framework64\v3.5"
 
 $script:OutputDirectory = "results"
-$script:NUnitConsoleExecutable = "$env:WORKSPACE/packages/NUnit.ConsoleRunner.3.12.0"
-$script:ExtentExecutable = "../packages/extent.0.0.3"
+$script:NUnitConsoleExecutable = "packages\NUnit.ConsoleRunner.3.12.0"
+$script:ExtentExecutable = "packages\extent.0.0.3"
 $script:DoxyConfig = "DoxygenTest\bundlemanager-poc.config",
-$script:DoxyPath = "$env:WORKSPACE/packages\Doxygen.1.8.14\tools"
-$script:DoxyExecutable = "$env:WORKSPACE/packages\Doxygen.1.8.14\tools\doxygen.exe",
-$script:GraphvizExecutable = "$env:WORKSPACE/packages\Graphviz.2.38.0.2\lib\Graphviz.dll"
+$script:DoxyExecutable = "packages\Doxygen.1.8.14\tools"
+$script:GraphvizExecutable = "packages\Graphviz.2.38.0.2\lib\Graphviz.dll"
 
+#setParamValues $SolutionPath  -SolutionName "" -NUnitConsoleExecutable "${env.WORKSPACE}\packages\NUnit.ConsoleRunner.3.12.0\tools\nunit3-console.exe"  -ExtentExecutable  "${env.WORKSPACE}packages\extent.0.0.3\tools\extent.exe" -DoxyConfig "C:\Temp\DoxygenTest\bundlemanager-poc.config"  -DoxyExecutable "${env.WORKSPACE}\packages\Doxygen.1.8.14\tools" -GraphvizExecutablePath "C:\Program Files\Graphviz\bin"
 
+# Create packages folder under parent project folder
+New-Item -Path "NUnitConsoleApp" -Name "packages" -ItemType "directory"
+
+#Install Nuget 
 $sourceNugetExe = "https://dist.nuget.org/win-x86-commandline/latest/nuget.exe"
-$NugetExe = "../packages/nuget.exe"
+$NugetExe = "packages\nuget.exe"
 Invoke-WebRequest $sourceNugetExe -OutFile $NugetExe
 Set-Alias nuget $targetNugetExe -Scope Global -Verbose
 
 # Need to install dependencies : NUnit.ConsoleRunner,extent,Doxygen and DotTool(Graphviz) .
-Set-Location -Path "../packages"
-Install-Package NUnit.ConsoleRunner -MinimumVersion 3.12.0
-Install-Package extent -MinimumVersion 0.0.3
+Set-Location -Path "packages"
+Install-Package NUnit.ConsoleRunner -RequiredVersion 3.12.0
+Install-Package extent -RequiredVersion 0.0.3
+Install-Package Doxygen -RequiredVersion 1.8.14
+Install-Package Graphviz -RequiredVersion 2.38.0.2
 
 # Run MSBuild with installed windows msbuild
 
@@ -61,21 +60,14 @@ nunit3-console /work:$OutputDirectory $ProjectPath
 Set-Location -Path $ExtentExecutable
 extent -i $OutputDirectory+"TestResult.xml" -o $OutputDirectory
 
-# Using Doxygen by adding in Package Manager
-Set-Location -Path "../packages"
-Install-Package Doxygen
-
 #
 # {doxygen_path}> .\doxygen.exe -g {location to config file to generate}
-Set-Location -Path $DoxyPath
+Set-Location -Path $DoxyExecutable
 .\doxygen.exe -g $DoxyConfig
 # Update OUTPUT_DIRECTORY in bundlemanager-poc.config file
 # {doxygen_path}> .\doxygen.exe -g {location to config file generated}
 .\doxygen.exe $DoxyConfig
 
-# Install Graphviz
-Set-Location -Path "../packages"
-Install-Package Graphviz
 
 # PROJECT_LOGO =
 # Enable HAVE_DOT = YES in bundlemanager-poc.config file for enabling graphviz
