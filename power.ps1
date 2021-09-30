@@ -1,5 +1,5 @@
 Write-Host "Congratulations! Your first script executed successfully"
-Write-Host "WORKSPAC== $WORKSPACE ==== `n"
+Write-Host "WORKSPAC== $env:WORKSPACE  NUnitConsoleApp/NUnitConsoleApp.sln==== `n"
 Set-Location -Path "$env:WORKSPACE NUnitConsoleApp/NUnitConsoleApp.sln"
 Write-Host "current loc = "Get-Location 
 
