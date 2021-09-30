@@ -7,7 +7,7 @@ $abc = Get-Location
 Write-Host "current locA = $abc" 
 $SolutionPathb = "NUnitConsoleApp"
 Set-Location -Path $SolutionPathb
-Write-Host "current loc = Get-Location"
+Write-Host "current loc = Get-Location"Get-Location
 
 #New-Item -Path "..\" -Name "logfiles" -ItemType "directory"
 
