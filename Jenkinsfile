@@ -1,10 +1,4 @@
 pipeline {
-	agent {
-		node {
-			label 'my-defined-label'
-			customWorkspace '/some/other/path'
-		}
-	}
   stages {
   stage('Stage 1') {
       steps {
