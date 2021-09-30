@@ -6,6 +6,7 @@ Set-Location -Path $SolutionPath
 
 
 $SolutionPathb = "\NUnitConsoleApp"
+Write-Host $SolutionPathb
 Set-Location -Path $SolutionPathb
 $abc = Get-Location 
 Write-Host "current locA = $abc" 
