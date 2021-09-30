@@ -1,6 +1,6 @@
 Write-Host "Congratulations! Your first script executed successfully"
-#Write-Host "WORKSPAC== $env:WORKSPACENUnitConsoleApp/NUnitConsoleApp.sln==== `n"
-$SolutionPath = $env:WORKSPACE"/NUnitConsoleApp"
+Write-Host "WORKSPAC== $env:WORKSPACE/NUnitConsoleApp/NUnitConsoleApp.sln==== `n"
+$SolutionPath = "$env:WORKSPACE/NUnitConsoleApp"
 #Set-Location -Path $SolutionPath
 Write-Host "ppppppppppppp"$SolutionPath
 
