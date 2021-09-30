@@ -19,7 +19,8 @@ Param
 
 #setParamValues -SolutionPath "aa//bb//cc"  -SolutionName "" -NUnitConsoleExecutable "${env.WORKSPACE}\packages\NUnit.ConsoleRunner.3.12.0\tools\nunit3-console.exe"  -ExtentExecutable  "${env.WORKSPACE}packages\extent.0.0.3\tools\extent.exe" -DoxyConfig "C:\Temp\DoxygenTest\bundlemanager-poc.config"  -DoxyExecutable "${env.WORKSPACE}\packages\Doxygen.1.8.14\tools" -GraphvizExecutablePath "C:\Program Files\Graphviz\bin"
 
-$script:SolutionPath = "$env:WORKSPACE/ConsoleApp1.sln"   #${env.WORKSPACE}
+Set-Location -Path $env:WORKSPACE
+$script:SolutionPath = "NUnitConsoleApp/ConsoleApp1.sln"   #${env.WORKSPACE}
 $script:ProjectPath = "$env:WORKSPACE/bin/Debug/netcoreapp3.1/ConsoleApp1.dll"
 $script:SolutionName = $env.JOB_NAME
 $script:MSBuildPath = $env:SystemRoot"/Microsoft.NET/Framework\v3.5"
