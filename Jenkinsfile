@@ -21,5 +21,10 @@ pipeline {
         }
       }
     }
+   stage('stage 4') {
+		steps {
+		   sh "printenv | sort"
+		}
+	}
   }
 }
