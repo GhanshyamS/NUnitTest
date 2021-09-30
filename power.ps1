@@ -1,5 +1,4 @@
 Write-Host "Congratulations! Your first script executed successfully"
-Write-Host "WORKSPACE var == $env:WORKSPACE ===="
-#New-Item ItemType "directory" -Force -Path ".\Teset"
+Write-Host "WORKSPAC== $env:WORKSPACE ==== Job name = $env:JOB_NAME"
 New-Item -Path "..\" -Name "logfiles" -ItemType "directory"
 
