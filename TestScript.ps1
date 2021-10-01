@@ -12,7 +12,7 @@ Param
     )
 
 }
-Set-Location -Path $env:WORKSPACE
+Set-Location -Path "E:\DotNetCore\NUnit\NUnitTest"
 $script:ProjectName = "NUnitConsoleApp"
 $script:SolutionPath = "$ProjectName/NUnitConsoleApp.sln"  
 $script:ProjectPath = "$ProjectName/NUnitConsoleApp/bin/Debug/netcoreapp3.1/ConsoleApp1.dll"
@@ -21,23 +21,28 @@ $script:MSBuildPath = "\Windows\Microsoft.NET\Framework64\v3.5"
 $script:OutputDirectory = "results"
 $script:NUnitConsoleExecutable = "packages\NUnit.ConsoleRunner.3.12.0"
 $script:ExtentExecutable = "packages\extent.0.0.3"
-$script:DoxyConfig = "DoxygenTest\bundlemanager-poc.config",
+$script:DoxyConfig = "DoxygenTest\bundlemanager-poc.config"
 $script:DoxyExecutable = "packages\Doxygen.1.8.14\tools"
 $script:GraphvizExecutable = "packages\Graphviz.2.38.0.2\lib\Graphviz.dll"
 
 #setParamValues $SolutionPath  -SolutionName "" -NUnitConsoleExecutable "${env.WORKSPACE}\packages\NUnit.ConsoleRunner.3.12.0\tools\nunit3-console.exe"  -ExtentExecutable  "${env.WORKSPACE}packages\extent.0.0.3\tools\extent.exe" -DoxyConfig "C:\Temp\DoxygenTest\bundlemanager-poc.config"  -DoxyExecutable "${env.WORKSPACE}\packages\Doxygen.1.8.14\tools" -GraphvizExecutablePath "C:\Program Files\Graphviz\bin"
 
 # Create packages folder under parent project folder
-New-Item -Path "NUnitConsoleApp" -Name "packages" -ItemType "directory"
+New-Item -ErrorAction Ignore -Name "packages" -ItemType "directory"
+New-Item -ErrorAction Ignore -Name "DoxygenTest" -ItemType "directory"
+New-Item -ErrorAction Ignore -Name "results" -ItemType "directory"
+New-Item -ErrorAction Ignore -Name "nuget" -ItemType "directory"
 
 #Install Nuget 
+#Register-PackageSource -Name MyNuGet -Location https://api.nuget.org/v3/index.json -ProviderName NuGet
 $sourceNugetExe = "https://dist.nuget.org/win-x86-commandline/latest/nuget.exe"
-$NugetExe = "packages\nuget.exe"
+$NugetExe = "nuget\nuget.exe"
 Invoke-WebRequest $sourceNugetExe -OutFile $NugetExe
-Set-Alias nuget $targetNugetExe -Scope Global -Verbose
+Set-Alias nuget $NugetExe -Scope Global -Verbose
 
 # Need to install dependencies : NUnit.ConsoleRunner,extent,Doxygen and DotTool(Graphviz) .
 Set-Location -Path "packages"
+			
 Install-Package NUnit.ConsoleRunner -RequiredVersion 3.12.0
 Install-Package extent -RequiredVersion 0.0.3
 Install-Package Doxygen -RequiredVersion 1.8.14
